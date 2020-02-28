@@ -1,70 +1,161 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uni_grade/welcome.dart';
 
+class LoginScreenPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _LoginScreenPage();
+}
 
+class _LoginScreenPage extends State<LoginScreenPage> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googlSignIn = new GoogleSignIn();
 
-  class LoginScreenPage extends StatelessWidget{
+  Future<FirebaseUser> _signIn(BuildContext context) async {
+    GoogleSignInAccount googleUser =
+        await _googlSignIn.signIn().catchError((onError) {
+      print("Error $onError");
+    });
+  
+    
 
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    AuthResult result = await _firebaseAuth.signInWithCredential(credential);
+    FirebaseUser userDetails = result.user;
+    ProviderDetails providerInfo = new ProviderDetails(userDetails.providerId);
+
+    List<ProviderDetails> providerData = new List<ProviderDetails>();
+    providerData.add(providerInfo);
+
+    UserDetails details = new UserDetails(
+      userDetails.providerId,
+      userDetails.displayName,
+      userDetails.photoUrl,
+      userDetails.email,
+      providerData,
+    );
+    setState(() {
+      Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (context) => new welcome(detailsUser: details,gSignIn: _googlSignIn,),
+        ),
+      );
+    });
+
+    return userDetails;
+  }
+
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
       ),
       body: Center(
-        child:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            
-            //GoogleButton
-            Container(
-              margin: EdgeInsets.all(5),
-              width:250,
-              height:50,
-              child: FloatingActionButton(
-                heroTag: 'btn1',
-                onPressed: () {(Navigator.pushNamed(context, "/DRP"));},
-                child: Text('Google ile Devam Edin',style: TextStyle(color:Colors.white ),),
-                tooltip: 'Google Girişi',
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          //GoogleButton
+          Container(
+            margin: EdgeInsets.all(5),
+            width: 250,
+            height: 50,
+            child: FloatingActionButton(
+              heroTag: 'btn1',
+              onPressed: () {
+                setState(() {
+                  Navigator.pushNamed(context, "/DRP");
+                });
+              },
+              child: Text(
+                'Google ile Devam Edin',
+                style: TextStyle(color: Colors.white),
               ),
+              tooltip: 'Google Girişi',
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
             ),
+          ),
 
-            //FacebookButton
-            Container(
-              margin: EdgeInsets.all(5),
-              width:250,
-              height:50,
-              child: FloatingActionButton(
-                heroTag: 'btn2',
-                onPressed: () {(Navigator.pushNamed(context, "/Gecmis"));},
-                child: Text('Facebook ile Devam Edin',style: TextStyle(color:Colors.white ),),
-                tooltip: 'Facebook Girişi',
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          //FacebookButton
+          Container(
+            margin: EdgeInsets.all(5),
+            width: 250,
+            height: 50,
+            child: FloatingActionButton(
+              heroTag: 'btn2',
+              onPressed: () {
+                _signIn(context)
+                    .then((FirebaseUser user) => print(user))
+                    .catchError((e) => print(e));
+              },
+              child: Text(
+                'Facebook ile Devam Edin',
+                style: TextStyle(color: Colors.white),
               ),
+              tooltip: 'Facebook Girişi',
+              backgroundColor: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
             ),
+          ),
 
-            //MisafirButton
-            new GestureDetector(
-               child: Container(
+          //MisafirButton
+          new GestureDetector(
+            child: Container(
               margin: EdgeInsets.all(5),
-              width:250,
-              height:50,
+              width: 250,
+              height: 50,
               child: FloatingActionButton(
                 heroTag: 'btn3',
-                onPressed: () {(Navigator.pushNamed(context, "/GecmisLogin"));},
-                child: Text('Misafir Olarak Devam Edin',style: TextStyle(color:Colors.white ),),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pushNamed(context, "/GecmisLogin");
+                  });
+                },
+                child: Text(
+                  'Misafir Olarak Devam Edin',
+                  style: TextStyle(color: Colors.white),
+                ),
                 tooltip: 'Misafir Girişi',
                 backgroundColor: Colors.brown,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
-              ),  
-            ), 
-            )
-            
-          ],
-        )
-      ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16.0))),
+              ),
+            ),
+          )
+        ],
+      )),
     );
   }
+}
 
-  }
+class UserDetails {
+  final String providerDetails;
+  final String userName;
+  final String photoUrl;
+  final String userEmail;
+  final List<ProviderDetails> providerData;
+
+  UserDetails(this.providerDetails, this.userName, this.photoUrl,
+      this.userEmail, this.providerData);
+}
+
+class ProviderDetails {
+  ProviderDetails(this.providerDetails);
+  final String providerDetails;
+}

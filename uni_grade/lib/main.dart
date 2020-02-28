@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uni_grade/welcome.dart';
 import 'LoginScreen.dart';
 import 'Gecmis.dart';
 import 'GecmisLogin.dart';
@@ -26,6 +27,7 @@ void main() {
       "/": (context) => LoginScreenPage(),
       "/GecmisLogin": (context) => GecmisLogin(),
       "/Gecmis": (context) => GecmisDersler(),
+      "/Welcome": (context) => welcome(),
     },
   ));
 }
