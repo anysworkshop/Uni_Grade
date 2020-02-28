@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uni_grade/welcome.dart';
 
@@ -80,12 +81,9 @@ class _LoginScreenPage extends State<LoginScreenPage> {
                   Navigator.pushNamed(context, "/DRP");
                 });
               },
-              child: Text(
-                'Google ile Devam Edin',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Row(mainAxisAlignment:MainAxisAlignment.center,children: <Widget>[Icon(FontAwesomeIcons.google,color:Colors.red),SizedBox(width: 10,),Text('Google ile Giriş Yapın')],),
               tooltip: 'Google Girişi',
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(16.0))),
             ),
