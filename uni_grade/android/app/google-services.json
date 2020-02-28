@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "741028240683",
+    "firebase_url": "https://uni-grade.firebaseio.com",
+    "project_id": "uni-grade",
+    "storage_bucket": "uni-grade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741028240683:android:c1be8e8f5405430ab1f96e",
+        "android_client_info": {
+          "package_name": "com.example.uni_grade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741028240683-mpoh9h8hvqik9gf4e3pslqr0pgd5nsem.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB57MLhIkP0qEhHse6PgZP3Ck2E0oMd_w8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741028240683-mpoh9h8hvqik9gf4e3pslqr0pgd5nsem.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
