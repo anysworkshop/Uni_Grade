@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 import 'LoginScreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,12 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class welcome extends StatelessWidget {
   final UserDetails detailsUser;
   GoogleSignInAccount googleUser;
-  GoogleSignIn gSignIn;
+  final GoogleSignIn _googlSignIn = new GoogleSignIn();
 
-  welcome({Key key, @required this.detailsUser, @required this.gSignIn})
+  welcome({Key key, @required this.detailsUser, @required this.googleUser})
       : super(key: key);
 
   Widget build(BuildContext context) {
+    final GoogleSignIn _gSignIn = GoogleSignIn();
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
@@ -25,7 +27,7 @@ class welcome extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
-                gSignIn.signOut();
+                _gSignIn.signOut();
                 print('Signed out');
                 Navigator.pop(context);
               },

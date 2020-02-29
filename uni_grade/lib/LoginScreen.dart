@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:uni_grade/welcome.dart';
+import 'package:uni_grade/GecmisLogin.dart';
+
 
 class LoginScreenPage extends StatefulWidget {
   @override
@@ -44,10 +45,10 @@ class _LoginScreenPage extends State<LoginScreenPage> {
       providerData,
     );
     setState(() {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         new MaterialPageRoute(
-          builder: (context) => new welcome(
+          builder: (context) => new GecmisLogin(
             detailsUser: details,
             gSignIn: _googlSignIn,
           ),
