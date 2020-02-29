@@ -47,6 +47,12 @@ class _LoginScreenPage extends State<LoginScreenPage>
       userDetails.email,
       providerData,
     );
+    
+    if (userDetails.uid == 'M7HU6KrU08bQkG5pB2vb52oH3qp1') {
+      print('Dogru Kullanici Girisi');
+    } else {
+      print('Kullanici girisi yanlis!!');
+    }
     setState(() {
       Navigator.pushReplacement(
         context,
