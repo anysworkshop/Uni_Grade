@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,8 +20,6 @@ class _LoginScreenPage extends State<LoginScreenPage> {
         await _googlSignIn.signIn().catchError((onError) {
       print("Error $onError");
     });
-  
-    
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -47,7 +47,10 @@ class _LoginScreenPage extends State<LoginScreenPage> {
       Navigator.push(
         context,
         new MaterialPageRoute(
-          builder: (context) => new welcome(detailsUser: details,gSignIn: _googlSignIn,),
+          builder: (context) => new welcome(
+            detailsUser: details,
+            gSignIn: _googlSignIn,
+          ),
         ),
       );
     });
@@ -62,6 +65,7 @@ class _LoginScreenPage extends State<LoginScreenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
         title: Text('Login'),
       ),
@@ -81,7 +85,16 @@ class _LoginScreenPage extends State<LoginScreenPage> {
                   Navigator.pushNamed(context, "/DRP");
                 });
               },
-              child: Row(mainAxisAlignment:MainAxisAlignment.center,children: <Widget>[Icon(FontAwesomeIcons.google,color:Colors.red),SizedBox(width: 10,),Text('Google ile Giriş Yapın')],),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 10),
+                  Icon(FontAwesomeIcons.google, color: Colors.red),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text('Google ile giriş yapın',style: TextStyle(fontSize: 15))
+                ],
+              ),
               tooltip: 'Google Girişi',
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
@@ -101,9 +114,18 @@ class _LoginScreenPage extends State<LoginScreenPage> {
                     .then((FirebaseUser user) => print(user))
                     .catchError((e) => print(e));
               },
-              child: Text(
-                'Facebook ile Devam Edin',
-                style: TextStyle(color: Colors.white),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 10),
+                  Icon(FontAwesomeIcons.facebook, color: Colors.white),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Facebook ile giriş yapın',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                ],
               ),
               tooltip: 'Facebook Girişi',
               backgroundColor: Colors.blue,
