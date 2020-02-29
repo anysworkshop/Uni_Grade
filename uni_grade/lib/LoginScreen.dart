@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uni_grade/Gecmis.dart';
 import 'package:uni_grade/GecmisLogin.dart';
 
 
@@ -48,7 +49,7 @@ class _LoginScreenPage extends State<LoginScreenPage> {
       Navigator.pushReplacement(
         context,
         new MaterialPageRoute(
-          builder: (context) => new GecmisLogin(
+          builder: (context) => new GecmisDersler(
             detailsUser: details,
             gSignIn: _googlSignIn,
           ),

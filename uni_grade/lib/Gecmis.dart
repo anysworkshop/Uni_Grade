@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginScreen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class GecmisDersler extends StatefulWidget {
+  final UserDetails detailsUser;
+  GoogleSignInAccount googleUser;
+  GoogleSignIn gSignIn;
+
+  GecmisDersler({Key key, @required this.detailsUser, @required this.gSignIn})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -88,8 +96,6 @@ class _GecmisDersler extends State<GecmisDersler> {
 
   void save() async {
     final arac = await SharedPreferences.getInstance();
-
-    
   }
 
   double harfNotuCevir(String str) {
@@ -166,6 +172,51 @@ class _GecmisDersler extends State<GecmisDersler> {
             ),
           ),
         ],
+      ),
+      drawer: new Container(
+        width: MediaQuery.of(context).size.width * 0.72,
+        child: new Drawer(
+          child: new ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              new UserAccountsDrawerHeader(
+                accountName: new Text(widget.detailsUser.userName),
+                accountEmail: new Text(widget.detailsUser.userEmail),
+                currentAccountPicture: new CircleAvatar(
+                  backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
+                ),
+                decoration: BoxDecoration(
+                  color:Colors.amber,
+                ),
+              ),
+              new ListTile(
+                title: new Text("Profil"),
+                trailing: new Icon(Icons.account_circle),
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text("Hedef"),
+                trailing: new Icon(Icons.trending_up),
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text("Çıkış Yap"),
+                trailing: new Icon(Icons.exit_to_app),
+                onTap: () {
+                  widget.gSignIn.signOut();
+                  print('Signed out');
+                  Navigator.pushReplacement(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => new LoginScreenPage(),
+                    ),
+                  );
+                },
+              ),
+              new Divider(),
+            ],
+          ),
+        ),
       ),
       body: new ListView.builder(
           itemCount: _selectedCompanys.length + 1,
