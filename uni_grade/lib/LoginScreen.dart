@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uni_grade/Gecmis.dart';
 import 'package:uni_grade/GecmisLogin.dart';
+import 'package:uni_grade/firebase.dart';
 
 class LoginScreenPage extends StatefulWidget {
   @override
@@ -35,6 +36,9 @@ class _LoginScreenPage extends State<LoginScreenPage>
 
     AuthResult result = await _firebaseAuth.signInWithCredential(credential);
     FirebaseUser userDetails = result.user;
+
+    await DatabaseService(uid: userDetails.uid)
+        .updateUserData(userDetails.displayName, userDetails.email, 10);
     ProviderDetails providerInfo = new ProviderDetails(userDetails.providerId);
 
     List<ProviderDetails> providerData = new List<ProviderDetails>();
@@ -80,6 +84,11 @@ class _LoginScreenPage extends State<LoginScreenPage>
           });
 
     _animationController.forward();
+  }
+
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
