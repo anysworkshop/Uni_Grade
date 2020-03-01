@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,7 +50,6 @@ class _LoginScreenPage extends State<LoginScreenPage>
       userDetails.displayName,
       userDetails.photoUrl,
       userDetails.email,
-      providerData,
     );
     setState(() {
       Navigator.pushReplacement(
@@ -58,6 +58,7 @@ class _LoginScreenPage extends State<LoginScreenPage>
           builder: (context) => new GecmisDersler(
             detailsUser: details,
             gSignIn: _googlSignIn,
+            i: 1,
           ),
         ),
       );
@@ -175,7 +176,16 @@ class _LoginScreenPage extends State<LoginScreenPage>
                   heroTag: 'btn3',
                   onPressed: () {
                     setState(() {
-                      Navigator.pushNamed(context, "/GecmisLogin");
+                      Navigator.pushReplacement(
+                        context,
+                        new MaterialPageRoute(
+                          builder: (context) => new GecmisDersler(
+                            detailsUser: misafir,
+                            gSignIn: _googlSignIn,
+                            i: 1,
+                          ),
+                        ),
+                      );
                     });
                   },
                   child: Text(
@@ -201,11 +211,13 @@ class UserDetails {
   final String userName;
   final String photoUrl;
   final String userEmail;
-  final List<ProviderDetails> providerData;
 
-  UserDetails(this.providerDetails, this.userName, this.photoUrl,
-      this.userEmail, this.providerData);
+  UserDetails(
+      this.providerDetails, this.userName, this.photoUrl, this.userEmail);
 }
+
+final misafir =
+    UserDetails('providerDetails', 'Misafir', 'https://cdn.discordapp.com/attachments/409979799155638273/683019458255519794/Subpost_2_-_mr_wonderful.jpg', 'Misafir');
 
 class ProviderDetails {
   ProviderDetails(this.providerDetails);
