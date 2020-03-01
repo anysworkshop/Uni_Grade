@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginScreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
 
 class GecmisDersler extends StatefulWidget {
   final UserDetails detailsUser;
@@ -11,6 +14,7 @@ class GecmisDersler extends StatefulWidget {
 
   GecmisDersler({Key key, @required this.detailsUser, @required this.gSignIn})
       : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -70,10 +74,52 @@ Notlar _selectedCompany;
 Notlar s;
 
 class _GecmisDersler extends State<GecmisDersler> {
+  File jsonFile;
+  var dir;
+  String fileName = "myFile.json";
+  bool fileExists = false;
+  Map<String, dynamic> fileContent;
+
   void initState() {
     _dropdownMenuItems = buildDropdownMenuItems(_companies);
     _selectedCompany = _dropdownMenuItems[0].value;
     super.initState();
+    getApplicationDocumentsDirectory().then((Directory directory) async {
+      dir = await getExternalStorageDirectory();
+      jsonFile = new File(dir.path + "/" + fileName);
+      print(jsonFile.path);
+      fileExists = jsonFile.existsSync();
+      if (fileExists)
+        this.setState(
+            () => fileContent = json.decode(jsonFile.readAsStringSync()));
+    });
+  }
+
+  void createFile(
+      Map<String, dynamic> content, var dir, String fileName) {
+    print("Creating file!");
+    File file = new File(dir.path + "/" + fileName);
+    file.createSync();
+    fileExists = true;
+    file.writeAsStringSync(json.encode(content));
+  }
+
+  void writeToFile(String key, dynamic value) {
+    print("Writing to file!");
+    Map<String, dynamic> content = {key: value};
+    if (fileExists) {
+      print("File exists");
+      Map<String, dynamic> jsonFileContent =
+          json.decode(jsonFile.readAsStringSync());
+      jsonFileContent.addAll(content);
+      jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+    } else {
+      print("File does not exist!");
+      createFile(content, dir, fileName);
+    }
+    this.setState(() => fileContent = json.decode(jsonFile.readAsStringSync()));
+    print(fileContent);
+    print(jsonFile.path);
   }
 
   Notlar selectedCompany;
@@ -140,6 +186,7 @@ class _GecmisDersler extends State<GecmisDersler> {
   List<List<String>> courseCredits = [];
 
   List<List<Information>> information = [];
+  List<String> saveFile = [];
 
   int i = 0;
   List<ExpansionTile> list = [];
@@ -186,12 +233,13 @@ class _GecmisDersler extends State<GecmisDersler> {
                   backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
                 ),
                 decoration: BoxDecoration(
-                  color:Colors.amber,
+                  color: Colors.amber,
                 ),
               ),
               new ListTile(
                 title: new Text("Profil"),
                 trailing: new Icon(Icons.account_circle),
+                onTap: () {},
               ),
               new Divider(),
               new ListTile(
@@ -233,7 +281,24 @@ class _GecmisDersler extends State<GecmisDersler> {
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: RaisedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                for (int i = 0; i < information.length; i++) {
+                                  for (int j = 0;
+                                      j < information[i].length;
+                                      j++) {
+                                    saveFile.add(information[i][j].courseName +
+                                        '*/*' +
+                                        information[i][j].ects.toString() +
+                                        '*/*' +
+                                        information[i][j].grade.name);
+                                  }
+                                }
+                                print(saveFile);
+
+                                writeToFile('hi', 'boi');
+                              });
+                            },
                             color: Colors.green,
                             child: Text(
                               "Kaydet",
