@@ -115,9 +115,9 @@ class _LoginScreenPage extends State<LoginScreenPage>
               child: FloatingActionButton(
                 heroTag: 'btn1',
                 onPressed: () {
-                  setState(() {
-                    Navigator.pushNamed(context, "/DRP");
-                  });
+                  _signIn(context)
+                      .then((FirebaseUser user) => print(user))
+                      .catchError((e) => print(e));
                 },
                 child: Row(
                   children: <Widget>[
@@ -144,11 +144,7 @@ class _LoginScreenPage extends State<LoginScreenPage>
               height: 50,
               child: FloatingActionButton(
                 heroTag: 'btn2',
-                onPressed: () {
-                  _signIn(context)
-                      .then((FirebaseUser user) => print(user))
-                      .catchError((e) => print(e));
-                },
+                onPressed: () {},
                 child: Row(
                   children: <Widget>[
                     SizedBox(width: 10),
