@@ -44,6 +44,11 @@ class Notlar {
 
   Notlar(this.id, this.name);
 
+  Map toJson() => {
+        'id': id,
+        'name': name,
+      };
+
   static List<Notlar> getCompanies() {
     return <Notlar>[
       Notlar(1, 'AA'),
@@ -66,12 +71,27 @@ class Information {
   Notlar grade;
 
   Information(this.courseName, this.ects, this.grade);
+
+  Map toJson() {
+    Map grade = this.grade != null ? this.grade.toJson() : null;
+
+    return {'courseName': courseName, 'ects': ects, 'grade': grade};
+  }
 }
+
+Notlar mg = Notlar(1, 'As');
+Information informationSample = Information('Ders 1', 3, mg);
+Information informationSampleB = Information('Ders 2', 5, mg);
+List<Information> informationSampleArray = [
+  Information('Ders 1', 3, mg),
+  Information('Ders 2', 5, mg)
+];
 
 List<Notlar> _companies = Notlar.getCompanies();
 List<DropdownMenuItem<Notlar>> _dropdownMenuItems;
 Notlar _selectedCompany;
 Notlar s;
+String x;
 
 class _GecmisDersler extends State<GecmisDersler> {
   File jsonFile;
@@ -88,20 +108,54 @@ class _GecmisDersler extends State<GecmisDersler> {
       dir = await getExternalStorageDirectory();
       jsonFile = new File(dir.path + "/" + fileName);
       print(jsonFile.path);
-      fileExists = jsonFile.existsSync();
+      //fileExists = jsonFile.existsSync();
       if (fileExists)
         this.setState(
             () => fileContent = json.decode(jsonFile.readAsStringSync()));
+      
+            
     });
+    
   }
 
-  void createFile(
-      Map<String, dynamic> content, var dir, String fileName) {
+  void createFile(Map<String, dynamic> content, var dir, String fileName) {
     print("Creating file!");
     File file = new File(dir.path + "/" + fileName);
     file.createSync();
-    fileExists = true;
-    file.writeAsStringSync(json.encode(content));
+    //fileExists = true;
+    print('BUNDAN ÖNCE');
+    x = jsonEncode(information);
+    //print(x);
+    file.writeAsStringSync(x);
+  }
+
+  void jsonReader() {
+    String reader = File(dir.path + "/" + fileName).readAsStringSync();
+    final jsonResponse = json.decode(reader);
+    var add = jsonResponse.toString();
+    print(jsonResponse[0][0]);
+    jsonToInfo(jsonResponse);
+  }
+
+  void jsonToInfo(final jsonResponse) {
+    for (int i = 0; i < jsonResponse.length; i++) {
+      information.add([]);
+      String courseNameTemp;
+      int ectsTemp;
+      Notlar notTemp;
+      int idTemp;
+      String nameTemp;
+      for (int j = 0; j < jsonResponse[i].length; j++) {
+        courseNameTemp = jsonResponse[i][j]["courseName"];
+        ectsTemp = jsonResponse[i][j]["ects"];
+        idTemp = jsonResponse[i][j]["grade"]["id"];
+        nameTemp = jsonResponse[i][j]["grade"]["name"];
+
+        information[i].add(new Information(
+            courseNameTemp, ectsTemp, Notlar(idTemp, nameTemp)));
+        print(information[i][j].grade.id);
+      }
+    }
   }
 
   void writeToFile(String key, dynamic value) {
@@ -112,14 +166,20 @@ class _GecmisDersler extends State<GecmisDersler> {
       Map<String, dynamic> jsonFileContent =
           json.decode(jsonFile.readAsStringSync());
       jsonFileContent.addAll(content);
-      jsonFile.writeAsStringSync(json.encode(jsonFileContent));
+
+      x = jsonEncode(information);
+      print(x);
+      jsonFile.writeAsStringSync(x);
+      //
+
+      //
     } else {
       print("File does not exist!");
       createFile(content, dir, fileName);
     }
-    this.setState(() => fileContent = json.decode(jsonFile.readAsStringSync()));
-    print(fileContent);
-    print(jsonFile.path);
+    //this.setState(() => fileContent = json.decode(jsonFile.readAsStringSync()));
+    //print(fileContent);
+    //print(jsonFile.path);
   }
 
   Notlar selectedCompany;
@@ -186,6 +246,7 @@ class _GecmisDersler extends State<GecmisDersler> {
   List<List<String>> courseCredits = [];
 
   List<List<Information>> information = [];
+  List<List<Information>> informationX = [];
   List<String> saveFile = [];
 
   int i = 0;
@@ -294,7 +355,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                                         information[i][j].grade.name);
                                   }
                                 }
-                                print(saveFile);
+                                //print(saveFile);
 
                                 writeToFile('hi', 'boi');
                               });
@@ -327,6 +388,10 @@ class _GecmisDersler extends State<GecmisDersler> {
                                 }
                                 ort = ort / ortEcts;
                                 print(ort);
+                                setState(() {
+                                  jsonReader();
+                                });
+                                print(dersCount);
                               });
                             },
                             color: Colors.blue,

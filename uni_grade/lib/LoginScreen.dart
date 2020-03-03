@@ -58,7 +58,6 @@ class _LoginScreenPage extends State<LoginScreenPage>
           builder: (context) => new GecmisDersler(
             detailsUser: details,
             gSignIn: _googlSignIn,
-            i: 1,
           ),
         ),
       );
@@ -182,7 +181,6 @@ class _LoginScreenPage extends State<LoginScreenPage>
                           builder: (context) => new GecmisDersler(
                             detailsUser: misafir,
                             gSignIn: _googlSignIn,
-                            i: 1,
                           ),
                         ),
                       );
