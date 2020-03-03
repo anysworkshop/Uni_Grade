@@ -4,12 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'LoginScreen.dart';
 
 class GecmisLogin extends StatefulWidget {
-  final UserDetails detailsUser;
-  GoogleSignInAccount googleUser;
-  GoogleSignIn gSignIn;
-
-  GecmisLogin({Key key, @required this.detailsUser, @required this.gSignIn})
-      : super(key: key);
 
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -21,37 +15,6 @@ class _GecmisLogin extends State<GecmisLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Gecmis Login')),
-        drawer: new Drawer(
-          child: new ListView(
-            children: <Widget>[
-              new UserAccountsDrawerHeader(
-                accountName: new Text(widget.detailsUser.userName),
-                accountEmail: new Text(widget.detailsUser.userEmail),
-                currentAccountPicture: new CircleAvatar(
-                  backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
-                ),
-              ),
-              new ListTile(
-                title: new Text("Hesap"),
-                trailing: new Icon(Icons.account_circle),
-              ),
-              new ListTile(
-                title: new Text("Çıkış Yap"),
-                trailing: new Icon(Icons.exit_to_app),
-                onTap: () {
-                  widget.gSignIn.signOut();
-                  print('Signed out');
-                  Navigator.pushReplacement(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (context) => new LoginScreenPage(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
         body: Center(
           child: Column(
             children: <Widget>[
