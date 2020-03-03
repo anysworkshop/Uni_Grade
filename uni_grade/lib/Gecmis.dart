@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+<<<<<<< HEAD
 import 'LoginScreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
@@ -17,6 +18,10 @@ class GecmisDersler extends StatefulWidget {
   GecmisDersler({Key key, @required this.detailsUser, @required this.gSignIn})
       : super(key: key);
 
+=======
+
+class GecmisDersler extends StatefulWidget {
+>>>>>>> parent of e9d742b... Gecmis
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -144,7 +149,13 @@ class _GecmisDersler extends State<GecmisDersler> {
 /*
   void save() async {
     final arac = await SharedPreferences.getInstance();
+<<<<<<< HEAD
   }*/
+=======
+
+    
+  }
+>>>>>>> parent of e9d742b... Gecmis
 
   double harfNotuCevir(String str) {
     if (str == 'AA') {
@@ -225,6 +236,7 @@ class _GecmisDersler extends State<GecmisDersler> {
           ),
         ],
       ),
+<<<<<<< HEAD
       drawer: new Container(
         width: MediaQuery.of(context).size.width * 0.72,
         child: new Drawer(
@@ -271,6 +283,8 @@ class _GecmisDersler extends State<GecmisDersler> {
           ),
         ),
       ),
+=======
+>>>>>>> parent of e9d742b... Gecmis
       body: new ListView.builder(
           itemCount: _selectedCompanys.length + 1,
           padding: EdgeInsets.all(20),
