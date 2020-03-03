@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:uni_grade/information.dart';
 import 'package:uni_grade/Notlar.dart';
+import 'dart:core';
 
 class GecmisDersler extends StatefulWidget {
   final UserDetails detailsUser;
@@ -33,27 +34,43 @@ List<Information> informationSampleArray = [
   Information('Ders 2', 5, mg)
 ];*/
 
-List<Notlar> _companies = Notlar.getCompanies();
+
+
+class _GecmisDersler extends State<GecmisDersler> {
+
+  List<Notlar> _companies = Notlar.getCompanies();
 List<DropdownMenuItem<Notlar>> _dropdownMenuItems;
 Notlar _selectedCompany;
 Notlar s;
 String x;
+GlobalKey<_GecmisDersler> _key = GlobalKey();
+File jsonFile;
+var dir;
+String fileName = "myFile.json";
+bool fileExists = false;
+Map<String, dynamic> fileContent;
+List<Notlar> _selectedCompanys = [];
+List<List<Notlar>> dersler = [];
 
-class _GecmisDersler extends State<GecmisDersler> {
-  File jsonFile;
-  var dir;
-  String fileName = "myFile.json";
-  bool fileExists = false;
-  Map<String, dynamic> fileContent;
+List<List<String>> courseNames = [];
+List<List<String>> courseCredits = [];
 
+List<List<Information>> information = [];
+List<String> saveFile = [];
+
+List<ExpansionTile> list = [];
+List<int> dersCount = [];
   void initState() {
     _dropdownMenuItems = buildDropdownMenuItems(_companies);
     _selectedCompany = _dropdownMenuItems[0].value;
     super.initState();
+    //dir = getExternalStorageDirectory();
     getApplicationDocumentsDirectory().then((Directory directory) async {
       dir = await getExternalStorageDirectory();
       jsonFile = new File(dir.path + "/" + fileName);
-      print(jsonFile.path);
+      this.setState(  () => jsonReader());
+
+      //print(jsonFile.path);
       //fileExists = jsonFile.existsSync();
       if (fileExists)
         this.setState(
@@ -83,20 +100,22 @@ class _GecmisDersler extends State<GecmisDersler> {
   void jsonToInfo(final jsonResponse) {
     for (int i = 0; i < jsonResponse.length; i++) {
       information.add([]);
+      print(information.length);
       String courseNameTemp;
       int ectsTemp;
       Notlar notTemp;
+      int idTemptoStr;
       int idTemp;
       String nameTemp;
       for (int j = 0; j < jsonResponse[i].length; j++) {
         courseNameTemp = jsonResponse[i][j]["courseName"];
         ectsTemp = jsonResponse[i][j]["ects"];
-        idTemp = jsonResponse[i][j]["grade"]["id"];
+        idTemp = int.parse(jsonResponse[i][j]["grade"]["id"].toString());
         nameTemp = jsonResponse[i][j]["grade"]["name"];
-
+        print('idTemp:$idTemp  --- nameTemp:' + nameTemp);
         information[i].add(new Information(
-            courseNameTemp, ectsTemp, Notlar(idTemp, nameTemp)));
-        print(information[i][j].grade.id);
+            courseNameTemp, ectsTemp, _dropdownMenuItems[idTemp - 1].value));
+        // print(information[i][j].grade.id);
       }
     }
   }
@@ -181,22 +200,7 @@ class _GecmisDersler extends State<GecmisDersler> {
     return 0.0;
   }
 
-  var currentSelectedValue;
-
-  List<Notlar> _selectedCompanys = [];
-  List<List<Notlar>> dersler = [];
-
-  List<List<String>> courseNames = [];
-  List<List<String>> courseCredits = [];
-
-  List<List<Information>> information = [];
-  List<List<Information>> informationX = [];
-  List<String> saveFile = [];
-
   int i = 0;
-  List<ExpansionTile> list = [];
-  List<int> dersCount = [];
-
   double ort = 0;
   int ortEcts = 0;
   Widget build(BuildContext context) {
@@ -210,11 +214,12 @@ class _GecmisDersler extends State<GecmisDersler> {
               onTap: () {
                 setState(() {
                   // list.add(...);
-                  _selectedCompanys.add(_dropdownMenuItems[0].value);
-                  dersler.add([_dropdownMenuItems[0].value]);
+                  //_selectedCompanys.add(_dropdownMenuItems[0].value);
+                  //dersler.add([_dropdownMenuItems[0].value]);
                   information.add(
                       [new Information('', 0, _dropdownMenuItems[0].value)]);
-                  dersCount.add(1);
+                  //print(information.length);
+                  // dersCount.add(1);
                 });
               },
               child: Icon(
@@ -272,11 +277,11 @@ class _GecmisDersler extends State<GecmisDersler> {
         ),
       ),
       body: new ListView.builder(
-          itemCount: _selectedCompanys.length + 1,
+          itemCount: information.length + 1,
           padding: EdgeInsets.all(20),
           shrinkWrap: true,
           itemBuilder: (context, int index) {
-            if (index == _selectedCompanys.length) {
+            if (index == information.length) {
               return Column(
                 children: <Widget>[
                   Row(
@@ -332,10 +337,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                                 }
                                 ort = ort / ortEcts;
                                 print(ort);
-                                setState(() {
-                                  jsonReader();
-                                });
-                                print(dersCount);
+                                //print(dersCount);
                               });
                             },
                             color: Colors.blue,
@@ -377,11 +379,13 @@ class _GecmisDersler extends State<GecmisDersler> {
                     title: Text((index + 1).toString() + '. Dönem'),
                     children: <Widget>[
                       ListView.builder(
-                        itemCount: dersCount[index],
+                        itemCount: information[index].length,
                         padding: EdgeInsets.only(top: 5),
                         shrinkWrap: true,
                         itemBuilder: (context, int index2) {
+                          final exp = Key(information[index].toString());
                           return SingleChildScrollView(
+                            key: exp,
                             scrollDirection: Axis.horizontal,
                             child: Container(
                               margin: EdgeInsets.all(5),
@@ -439,11 +443,12 @@ class _GecmisDersler extends State<GecmisDersler> {
                                         width: 65,
                                         child: DropdownButtonHideUnderline(
                                             child: DropdownButton(
-                                          value: dersler[index][index2],
+                                          value:
+                                              information[index][index2].grade,
                                           items: _dropdownMenuItems,
                                           onChanged: (value) {
                                             setState(() {
-                                              dersler[index][index2] = value;
+                                              //dersler[index][index2] = value;
                                               information[index][index2].grade =
                                                   value;
                                               print(information[index][index2]
@@ -466,10 +471,10 @@ class _GecmisDersler extends State<GecmisDersler> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            dersler[index].removeAt(index2);
                                             information[index].removeAt(index2);
-                                            dersCount[index] =
-                                                dersCount[index] - 1;
+                                            // dersler[index].removeAt(index2);
+                                            print('index2=$index' +
+                                                'index2=$index2');
                                           });
                                         },
                                         child: Icon(
@@ -493,8 +498,8 @@ class _GecmisDersler extends State<GecmisDersler> {
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
-                                dersCount[index] = dersCount[index] + 1;
-                                dersler[index].add(_dropdownMenuItems[0].value);
+                                // dersCount[index] = dersCount[index] + 1;
+                                //dersler[index].add(_dropdownMenuItems[0].value);
                                 information[index].add(new Information(
                                     '', 0, _dropdownMenuItems[0].value));
                               });
