@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
+import 'package:uni_grade/information.dart';
+import 'package:uni_grade/Notlar.dart';
 
 class GecmisDersler extends StatefulWidget {
   final UserDetails detailsUser;
@@ -22,70 +24,14 @@ class GecmisDersler extends StatefulWidget {
   }
 }
 
-double _width = 300;
-double _height = 50;
-BorderRadiusGeometry _borderRadius = BorderRadius.circular(55);
-
-class Dersler {
-  double width;
-  double height;
-  AnimatedContainer animatedContainer;
-
-  Dersler(double width, double height, AnimatedContainer animatedContainer) {
-    this.width = width;
-    this.height = height;
-    this.animatedContainer = animatedContainer;
-  }
-}
-
-class Notlar {
-  int id;
-  String name;
-
-  Notlar(this.id, this.name);
-
-  Map toJson() => {
-        'id': id,
-        'name': name,
-      };
-
-  static List<Notlar> getCompanies() {
-    return <Notlar>[
-      Notlar(1, 'AA'),
-      Notlar(2, 'BA'),
-      Notlar(3, 'BB'),
-      Notlar(4, 'CB'),
-      Notlar(5, 'CC'),
-      Notlar(6, 'DC'),
-      Notlar(7, 'DD'),
-      Notlar(8, 'FD'),
-      Notlar(9, 'FF'),
-      Notlar(10, 'F0'),
-    ];
-  }
-}
-
-class Information {
-  String courseName;
-  int ects;
-  Notlar grade;
-
-  Information(this.courseName, this.ects, this.grade);
-
-  Map toJson() {
-    Map grade = this.grade != null ? this.grade.toJson() : null;
-
-    return {'courseName': courseName, 'ects': ects, 'grade': grade};
-  }
-}
-
+/*
 Notlar mg = Notlar(1, 'As');
 Information informationSample = Information('Ders 1', 3, mg);
 Information informationSampleB = Information('Ders 2', 5, mg);
 List<Information> informationSampleArray = [
   Information('Ders 1', 3, mg),
   Information('Ders 2', 5, mg)
-];
+];*/
 
 List<Notlar> _companies = Notlar.getCompanies();
 List<DropdownMenuItem<Notlar>> _dropdownMenuItems;
@@ -112,10 +58,7 @@ class _GecmisDersler extends State<GecmisDersler> {
       if (fileExists)
         this.setState(
             () => fileContent = json.decode(jsonFile.readAsStringSync()));
-      
-            
     });
-    
   }
 
   void createFile(Map<String, dynamic> content, var dir, String fileName) {
@@ -182,8 +125,6 @@ class _GecmisDersler extends State<GecmisDersler> {
     //print(jsonFile.path);
   }
 
-  Notlar selectedCompany;
-
   List<DropdownMenuItem<Notlar>> buildDropdownMenuItems(List companies) {
     List<DropdownMenuItem<Notlar>> items = List();
     for (Notlar company in companies) {
@@ -200,9 +141,10 @@ class _GecmisDersler extends State<GecmisDersler> {
     return items;
   }
 
+/*
   void save() async {
     final arac = await SharedPreferences.getInstance();
-  }
+  }*/
 
   double harfNotuCevir(String str) {
     if (str == 'AA') {
@@ -235,6 +177,8 @@ class _GecmisDersler extends State<GecmisDersler> {
     if (str == 'F0') {
       return 0.0;
     }
+
+    return 0.0;
   }
 
   var currentSelectedValue;
