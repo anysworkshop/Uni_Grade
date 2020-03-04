@@ -30,58 +30,49 @@ class _Profil extends State<Profil> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Name"),
+            Text(
+              "İsim",
+              style: _style(),
+            ),
             SizedBox(
               height: 4,
             ),
             Text(
-              "Milan Short",
-              style: _style(),
+              "Yankı Sırtaş",
             ),
             SizedBox(
               height: 16,
             ),
             Text(
-              "Email",
+              "E-posta",
               style: _style(),
             ),
             SizedBox(
               height: 4,
             ),
-            Text("milan@gmail.com"),
+            Text("yankisirtas473@gmail.com"),
             SizedBox(
               height: 16,
             ),
             Text(
-              "Location",
+              "Üniversite",
               style: _style(),
             ),
             SizedBox(
               height: 4,
             ),
-            Text("New York, USA"),
+            Text("Yıldız Teknik Üniversitesi"),
             SizedBox(
               height: 16,
             ),
             Text(
-              "Language",
+              "Bölüm",
               style: _style(),
             ),
             SizedBox(
               height: 4,
             ),
-            Text("English, French"),
-            SizedBox(
-              height: 16,
-            ),
-            Text(
-              "Occupation",
-              style: _style(),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text("Employee"),
+            Text("Bilgisayar Mühendisliği"),
             SizedBox(
               height: 16,
             ),
@@ -94,8 +85,6 @@ class _Profil extends State<Profil> {
     );
   }
 }
-
-
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
@@ -158,7 +147,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              fit: BoxFit.cover, image: NetworkImage(detailsUser.photoUrl))),
+                              fit: BoxFit.cover,
+                              image: NetworkImage(detailsUser.photoUrl))),
                     ),
                     SizedBox(
                       height: 16,
@@ -167,17 +157,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       detailsUser.userName,
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                    SizedBox(width: 15),
-                    Text(
-                      detailsUser.userEmail,
-                      style: TextStyle(color: Colors.white60, fontSize: 12),
-                    )
                   ],
                 ),
                 Column(
                   children: <Widget>[
                     Text(
-                      "AGNO",
+                      "Sınıf",
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
@@ -190,18 +175,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                   children: <Widget>[
                     Text(
                       "Dönem",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      "12",
-                      style: TextStyle(fontSize: 26, color: Colors.white),
-                    )
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "Routines",
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
@@ -218,11 +191,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 Column(
                   children: <Widget>[
                     Text(
-                      "Savings",
+                      "AGNO",
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
-                      "20K",
+                      "3.0",
                       style: TextStyle(color: Colors.white, fontSize: 24),
                     )
                   ],
@@ -233,10 +206,10 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 Column(
                   children: <Widget>[
                     Text(
-                      "July Goals",
+                      "Hedef AGNO",
                       style: TextStyle(color: Colors.white),
                     ),
-                    Text("50K",
+                    Text("3.2",
                         style: TextStyle(color: Colors.white, fontSize: 24))
                   ],
                 ),
@@ -262,7 +235,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       width: 110,
                       height: 32,
                       child: Center(
-                        child: Text("Edit Profile"),
+                        child: Text("Düzenle"),
                       ),
                       decoration: BoxDecoration(
                           color: Colors.white,
