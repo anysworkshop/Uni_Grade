@@ -113,11 +113,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               children: <Widget>[
                 IconButton(
                   icon: Icon(
-                    Icons.menu,
+                    Icons.arrow_back,
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    //Navigator.pop();
+                    Navigator.of(context).pop();
                   },
                 ),
                 Text(
