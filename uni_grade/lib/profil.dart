@@ -38,7 +38,7 @@ class _Profil extends State<Profil> {
               height: 4,
             ),
             Text(
-              "Yankı Sırtaş",
+              widget.detailsUser.userName,
             ),
             SizedBox(
               height: 16,
@@ -50,7 +50,7 @@ class _Profil extends State<Profil> {
             SizedBox(
               height: 4,
             ),
-            Text("yankisirtas473@gmail.com"),
+            Text(widget.detailsUser.userEmail),
             SizedBox(
               height: 16,
             ),
@@ -102,7 +102,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return ClipPath(
       clipper: MyClipper(),
       child: Container(
-        padding: EdgeInsets.only(top: 4),
+        padding: EdgeInsets.only(top: 25),
         decoration: BoxDecoration(color: Colors.redAccent, boxShadow: [
           BoxShadow(color: Colors.red, blurRadius: 20, offset: Offset(0, 0))
         ]),
@@ -168,6 +168,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     Text(
                       "8",
                       style: TextStyle(fontSize: 26, color: Colors.white),
+                    ),
+                    SizedBox(height: 50,),
+                    Text(
+                      "AGNO",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      "3.0",
+                      style: TextStyle(color: Colors.white, fontSize: 24),
                     )
                   ],
                 ),
@@ -180,31 +189,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                     Text(
                       "4",
                       style: TextStyle(fontSize: 26, color: Colors.white),
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "AGNO",
-                      style: TextStyle(color: Colors.white),
                     ),
-                    Text(
-                      "3.0",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 32,
-                ),
-                Column(
-                  children: <Widget>[
+                    SizedBox(height: 50,),
                     Text(
                       "Hedef AGNO",
                       style: TextStyle(color: Colors.white),
@@ -213,13 +199,10 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                         style: TextStyle(color: Colors.white, fontSize: 24))
                   ],
                 ),
-                SizedBox(
-                  width: 16,
-                )
               ],
             ),
             SizedBox(
-              height: 8,
+              height: 50,
             ),
             Align(
               alignment: Alignment.bottomRight,
