@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uni_grade/information.dart';
 import 'package:uni_grade/Notlar.dart';
 import 'dart:core';
+import 'profil.dart';
 
 class GecmisDersler extends StatefulWidget {
   final UserDetails detailsUser;
@@ -34,32 +35,29 @@ List<Information> informationSampleArray = [
   Information('Ders 2', 5, mg)
 ];*/
 
-
-
 class _GecmisDersler extends State<GecmisDersler> {
-
   List<Notlar> _companies = Notlar.getCompanies();
-List<DropdownMenuItem<Notlar>> _dropdownMenuItems;
-Notlar _selectedCompany;
-Notlar s;
-String x;
-GlobalKey<_GecmisDersler> _key = GlobalKey();
-File jsonFile;
-var dir;
-String fileName = "myFile.json";
-bool fileExists = false;
-Map<String, dynamic> fileContent;
-List<Notlar> _selectedCompanys = [];
-List<List<Notlar>> dersler = [];
+  List<DropdownMenuItem<Notlar>> _dropdownMenuItems;
+  Notlar _selectedCompany;
+  Notlar s;
+  String x;
+  GlobalKey<_GecmisDersler> _key = GlobalKey();
+  File jsonFile;
+  var dir;
+  String fileName = "myFile.json";
+  bool fileExists = false;
+  Map<String, dynamic> fileContent;
+  List<Notlar> _selectedCompanys = [];
+  List<List<Notlar>> dersler = [];
 
-List<List<String>> courseNames = [];
-List<List<String>> courseCredits = [];
+  List<List<String>> courseNames = [];
+  List<List<String>> courseCredits = [];
 
-List<List<Information>> information = [];
-List<String> saveFile = [];
+  List<List<Information>> information = [];
+  List<String> saveFile = [];
 
-List<ExpansionTile> list = [];
-List<int> dersCount = [];
+  List<ExpansionTile> list = [];
+  List<int> dersCount = [];
   void initState() {
     _dropdownMenuItems = buildDropdownMenuItems(_companies);
     _selectedCompany = _dropdownMenuItems[0].value;
@@ -68,7 +66,7 @@ List<int> dersCount = [];
     getApplicationDocumentsDirectory().then((Directory directory) async {
       dir = await getExternalStorageDirectory();
       jsonFile = new File(dir.path + "/" + fileName);
-      this.setState(  () => jsonReader());
+      this.setState(() => jsonReader());
 
       //print(jsonFile.path);
       //fileExists = jsonFile.existsSync();
@@ -249,7 +247,16 @@ List<int> dersCount = [];
               new ListTile(
                 title: new Text("Profil"),
                 trailing: new Icon(Icons.account_circle),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => new Profil(
+                          detailsUser: widget.detailsUser,
+                          gSignIn: widget.gSignIn),
+                    ),
+                  );
+                },
               ),
               new Divider(),
               new ListTile(
@@ -352,7 +359,14 @@ List<int> dersCount = [];
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: RaisedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                while (information.length != 0) {
+                                  information.removeLast();
+                                }
+                                information.add([]);
+                              });
+                            },
                             color: Colors.red,
                             child: Text(
                               "Sıfırla",
