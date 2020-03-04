@@ -9,8 +9,9 @@ class Profil extends StatefulWidget {
   final UserDetails detailsUser;
   GoogleSignInAccount googleUser;
   GoogleSignIn gSignIn;
+  List<String> data;
 
-  Profil({Key key, @required this.detailsUser, @required this.gSignIn})
+  Profil({Key key, @required this.detailsUser, @required this.gSignIn,this.data})
       : super(key: key);
   State<StatefulWidget> createState() => _Profil();
 }
@@ -24,7 +25,7 @@ class _Profil extends State<Profil> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          detailsUser: widget.detailsUser, gSignIn: widget.gSignIn),
+          detailsUser: widget.detailsUser, gSignIn: widget.gSignIn,data: widget.data,),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -93,8 +94,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final UserDetails detailsUser;
   GoogleSignInAccount googleUser;
   GoogleSignIn gSignIn;
+  List<String> data;
 
-  CustomAppBar({Key key, @required this.detailsUser, @required this.gSignIn})
+  CustomAppBar({Key key, @required this.detailsUser, @required this.gSignIn,this.data})
       : super(key: key);
   State<StatefulWidget> createState() => _Profil();
   @override
@@ -166,16 +168,18 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
-                      "8",
+                      data[0],
                       style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                     Text(
                       "AGNO",
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
-                      "3.0",
+                      data[2],
                       style: TextStyle(color: Colors.white, fontSize: 24),
                     )
                   ],
@@ -187,15 +191,17 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                     Text(
-                      "4",
+                      data[1],
                       style: TextStyle(fontSize: 26, color: Colors.white),
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                     Text(
                       "Hedef AGNO",
                       style: TextStyle(color: Colors.white),
                     ),
-                    Text("3.2",
+                    Text(data[3],
                         style: TextStyle(color: Colors.white, fontSize: 24))
                   ],
                 ),

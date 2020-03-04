@@ -55,6 +55,7 @@ class _GecmisDersler extends State<GecmisDersler> {
 
   List<List<Information>> information = [];
   List<String> saveFile = [];
+  List<String> data = ['0', '2', '0', '0', '0', '0'];
 
   List<ExpansionTile> list = [];
   List<int> dersCount = [];
@@ -216,6 +217,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                   //dersler.add([_dropdownMenuItems[0].value]);
                   information.add(
                       [new Information('', 0, _dropdownMenuItems[0].value)]);
+                  data[1] = (int.parse(data[1]) + 1).toString();
                   //print(information.length);
                   // dersCount.add(1);
                 });
@@ -252,8 +254,10 @@ class _GecmisDersler extends State<GecmisDersler> {
                     context,
                     new MaterialPageRoute(
                       builder: (context) => new Profil(
-                          detailsUser: widget.detailsUser,
-                          gSignIn: widget.gSignIn),
+                        detailsUser: widget.detailsUser,
+                        gSignIn: widget.gSignIn,
+                        data: this.data,
+                      ),
                     ),
                   );
                 },

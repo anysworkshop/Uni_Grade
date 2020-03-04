@@ -25,7 +25,7 @@ class welcome extends StatelessWidget {
                 FontAwesomeIcons.signOutAlt,
                 size: 20.0,
                 color: Colors.white,
-              ),
+              ),  
               onPressed: () {
                 _gSignIn.signOut();
                 print('Signed out');
