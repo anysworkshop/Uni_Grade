@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uni_grade/firebase.dart';
 import 'LoginScreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
@@ -10,6 +12,8 @@ import 'package:uni_grade/information.dart';
 import 'package:uni_grade/Notlar.dart';
 import 'dart:core';
 import 'profil.dart';
+import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GecmisDersler extends StatefulWidget {
   final UserDetails detailsUser;
@@ -26,9 +30,9 @@ class GecmisDersler extends StatefulWidget {
   }
 }
 
-/*
 Notlar mg = Notlar(1, 'As');
 Information informationSample = Information('Ders 1', 3, mg);
+/*
 Information informationSampleB = Information('Ders 2', 5, mg);
 List<Information> informationSampleArray = [
   Information('Ders 1', 3, mg),
@@ -55,7 +59,7 @@ class _GecmisDersler extends State<GecmisDersler> {
 
   List<List<Information>> information = [];
   List<String> saveFile = [];
-  List<String> data = ['0', '2', '0', '0', '0', '0'];
+  List<String> data = ['0', '2', '0', '0'];
 
   List<ExpansionTile> list = [];
   List<int> dersCount = [];
@@ -119,6 +123,24 @@ class _GecmisDersler extends State<GecmisDersler> {
     }
   }
 
+  void writeToServer() async {
+    String reader = File(dir.path + "/" + fileName).readAsStringSync();
+    var jsonResponse = json.decode(reader);
+    for (int i = 0; i < jsonResponse.length; i++) {
+      for (int j = 0; j < jsonResponse[i].length; j++) {
+        print((i + 1).toString() + "-->" + (i + 1).toString());
+        await Firestore.instance
+            .collection('Students')
+            .document(widget.detailsUser.userId)
+            .collection("Curriculum")
+            .document("Term " + (i + 1).toString())
+            .collection("Course " + (j + 1).toString())
+            .document("Course " + (j + 1).toString())
+            .setData(jsonResponse[i][j]);
+      }
+    }
+  }
+
   void writeToFile(String key, dynamic value) {
     print("Writing to file!");
     Map<String, dynamic> content = {key: value};
@@ -126,14 +148,15 @@ class _GecmisDersler extends State<GecmisDersler> {
       print("File exists");
       Map<String, dynamic> jsonFileContent =
           json.decode(jsonFile.readAsStringSync());
-      jsonFileContent.addAll(content);
-
+      // jsonFileContent.addAll(content);
+      print(widget.gSignIn.clientId);
       x = jsonEncode(information);
       print(x);
       jsonFile.writeAsStringSync(x);
       //
 
       //
+
     } else {
       print("File does not exist!");
       createFile(content, dir, fileName);
@@ -349,6 +372,8 @@ class _GecmisDersler extends State<GecmisDersler> {
                                 ort = ort / ortEcts;
                                 print(ort);
                                 //print(dersCount);
+                                //print(widget.detailsUser.userId);
+                                writeToServer();
                               });
                             },
                             color: Colors.blue,
@@ -390,152 +415,164 @@ class _GecmisDersler extends State<GecmisDersler> {
                 ],
               );
             } else {
-              return Card(
-                  borderOnForeground: true,
-                  elevation: 6,
-                  child: ExpansionTile(
-                    title: Text((index + 1).toString() + '. Dönem'),
-                    children: <Widget>[
-                      ListView.builder(
-                        itemCount: information[index].length,
-                        padding: EdgeInsets.only(top: 5),
-                        shrinkWrap: true,
-                        itemBuilder: (context, int index2) {
-                          final exp = Key(information[index].toString());
-                          return SingleChildScrollView(
-                            key: exp,
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                              margin: EdgeInsets.all(5),
-                              //decoration: BoxDecoration(
-                              //  border: Border.all(color: Colors.black26),
-                              //borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 175,
-                                    child: TextFormField(
-                                      initialValue:
-                                          information[index][index2].courseName,
-                                      onChanged: (String str) {
-                                        information[index][index2].courseName =
-                                            str;
-                                      },
-                                      decoration: InputDecoration(
-                                          semanticCounterText: 'hey',
-                                          border: OutlineInputBorder(),
-                                          labelText: ' Ders Adı'),
+              final disKey = information[index].toString();
+              return Dismissible(
+                key: Key(disKey),
+                onDismissed: (direction) {
+                  setState(() {
+                    information.removeAt(index);
+                    data[1] = (int.parse(data[1]) - 1).toString();
+                  });
+                },
+                child: Card(
+                    borderOnForeground: true,
+                    elevation: 6,
+                    child: ExpansionTile(
+                      initiallyExpanded: true,
+                      title: Text((index + 1).toString() + '. Dönem'),
+                      children: <Widget>[
+                        ListView.builder(
+                          itemCount: information[index].length,
+                          padding: EdgeInsets.only(top: 5),
+                          shrinkWrap: true,
+                          itemBuilder: (context, int index2) {
+                            final exp = Key(information[index].toString());
+                            return SingleChildScrollView(
+                              key: exp,
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                //decoration: BoxDecoration(
+                                //  border: Border.all(color: Colors.black26),
+                                //borderRadius: BorderRadius.circular(10)),
+                                child: Row(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 175,
+                                      child: TextFormField(
+                                        initialValue: information[index][index2]
+                                            .courseName,
+                                        onChanged: (String str) {
+                                          information[index][index2]
+                                              .courseName = str;
+                                        },
+                                        decoration: InputDecoration(
+                                            semanticCounterText: 'hey',
+                                            border: OutlineInputBorder(),
+                                            labelText: ' Ders Adı'),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  SizedBox(
-                                    width: 65,
-                                    child: TextFormField(
-                                      initialValue: information[index][index2]
-                                          .ects
-                                          .toString(),
-                                      onChanged: (String ects) {
-                                        information[index][index2].ects =
-                                            int.parse(ects);
-                                      },
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        WhitelistingTextInputFormatter
-                                            .digitsOnly
-                                      ],
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'ECTS'),
+                                    SizedBox(width: 5),
+                                    SizedBox(
+                                      width: 65,
+                                      child: TextFormField(
+                                        initialValue: information[index][index2]
+                                            .ects
+                                            .toString(),
+                                        onChanged: (String ects) {
+                                          information[index][index2].ects =
+                                              int.parse(ects);
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          WhitelistingTextInputFormatter
+                                              .digitsOnly
+                                        ],
+                                        decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'ECTS'),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Container(
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.black26),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: SizedBox(
-                                        height: 30,
-                                        width: 65,
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                          value:
-                                              information[index][index2].grade,
-                                          items: _dropdownMenuItems,
-                                          onChanged: (value) {
+                                    SizedBox(width: 5),
+                                    Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.black26),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 65,
+                                          child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                            value: information[index][index2]
+                                                .grade,
+                                            items: _dropdownMenuItems,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                //dersler[index][index2] = value;
+                                                information[index][index2]
+                                                    .grade = value;
+                                                print(information[index][index2]
+                                                    .courseName);
+                                              });
+                                            },
+                                          )),
+                                        )),
+                                    SizedBox(width: 5),
+                                    Container(
+                                        height: 60,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                            //color: Colors.grey[300],
+
+                                            border: Border.all(
+                                                color: Colors.black26),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: GestureDetector(
+                                          onTap: () {
                                             setState(() {
-                                              //dersler[index][index2] = value;
-                                              information[index][index2].grade =
-                                                  value;
-                                              print(information[index][index2]
-                                                  .courseName);
+                                              information[index]
+                                                  .removeAt(index2);
+                                              // dersler[index].removeAt(index2);
+                                              print('index2=$index' +
+                                                  'index2=$index2');
                                             });
                                           },
+                                          child: Icon(
+                                            Icons.remove_circle,
+                                            size: 25,
+                                          ),
                                         )),
-                                      )),
-                                  SizedBox(width: 5),
-                                  Container(
-                                      height: 60,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                          //color: Colors.grey[300],
-
-                                          border:
-                                              Border.all(color: Colors.black26),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            information[index].removeAt(index2);
-                                            // dersler[index].removeAt(index2);
-                                            print('index2=$index' +
-                                                'index2=$index2');
-                                          });
-                                        },
-                                        child: Icon(
-                                          Icons.remove_circle,
-                                          size: 25,
-                                        ),
-                                      )),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(top: 5),
-                          height: 50,
-                          width: 350,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black26),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                // dersCount[index] = dersCount[index] + 1;
-                                //dersler[index].add(_dropdownMenuItems[0].value);
-                                information[index].add(new Information(
-                                    '', 0, _dropdownMenuItems[0].value));
-                              });
-                            },
-                            child: Icon(
-                              Icons.add_box,
-                              size: 35,
-                            ),
-                          )),
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            height: 30,
-                          )
-                        ],
-                      ),
-                    ],
-                  ));
+                            );
+                          },
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(top: 5),
+                            height: 50,
+                            width: 350,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black26),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  // dersCount[index] = dersCount[index] + 1;
+                                  //dersler[index].add(_dropdownMenuItems[0].value);
+                                  information[index].add(new Information(
+                                      '', 0, _dropdownMenuItems[0].value));
+                                });
+                              },
+                              child: Icon(
+                                Icons.add_box,
+                                size: 35,
+                              ),
+                            )),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              height: 30,
+                            )
+                          ],
+                        ),
+                      ],
+                    )),
+              );
             }
           }),
     );

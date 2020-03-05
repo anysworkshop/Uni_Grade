@@ -50,6 +50,7 @@ class _LoginScreenPage extends State<LoginScreenPage>
       userDetails.displayName,
       userDetails.photoUrl,
       userDetails.email,
+      userDetails.uid,
     );
     setState(() {
       Navigator.pushReplacement(
@@ -209,13 +210,19 @@ class UserDetails {
   final String userName;
   final String photoUrl;
   final String userEmail;
+  final String userId;
 
   UserDetails(
-      this.providerDetails, this.userName, this.photoUrl, this.userEmail);
+      this.providerDetails, this.userName, this.photoUrl, this.userEmail,this.userId);
 }
 
-final misafir =
-    UserDetails('providerDetails', 'Misafir', 'https://cdn.discordapp.com/attachments/409979799155638273/683019458255519794/Subpost_2_-_mr_wonderful.jpg', 'Misafir');
+final misafir = UserDetails(
+    'providerDetails',
+    'Misafir',
+    'https://cdn.discordapp.com/attachments/409979799155638273/683019458255519794/Subpost_2_-_mr_wonderful.jpg',
+    'Misafir',
+    'Misafir'
+    );
 
 class ProviderDetails {
   ProviderDetails(this.providerDetails);

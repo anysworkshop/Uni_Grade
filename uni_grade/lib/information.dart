@@ -12,4 +12,8 @@ class Information {
 
     return {'courseName': courseName, 'ects': ects, 'grade': grade};
   }
+  Map toJsonX() {
+
+    return {'courseName': courseName, 'ects': ects};
+  }
 }
