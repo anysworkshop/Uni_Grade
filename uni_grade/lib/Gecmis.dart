@@ -227,7 +227,9 @@ class _GecmisDersler extends State<GecmisDersler> {
   int ortEcts = 0;
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigoAccent,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text('Uni-Grade'),
         actions: <Widget>[
           Padding(
@@ -266,7 +268,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                   backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: Colors.redAccent,
                 ),
               ),
               new ListTile(
@@ -425,6 +427,9 @@ class _GecmisDersler extends State<GecmisDersler> {
                   });
                 },
                 child: Card(
+                  
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
                     borderOnForeground: true,
                     elevation: 6,
                     child: ExpansionTile(
@@ -543,10 +548,12 @@ class _GecmisDersler extends State<GecmisDersler> {
                           },
                         ),
                         Container(
+                          
                             margin: EdgeInsets.only(top: 5),
                             height: 50,
                             width: 350,
                             decoration: BoxDecoration(
+                              
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10)),
                             child: GestureDetector(
