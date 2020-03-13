@@ -128,7 +128,7 @@ class _GecmisDersler extends State<GecmisDersler> {
     var jsonResponse = json.decode(reader);
     for (int i = 0; i < jsonResponse.length; i++) {
       for (int j = 0; j < jsonResponse[i].length; j++) {
-        print((i + 1).toString() + "-->" + (i + 1).toString());
+        print((i + 1).toString() + "-->" + (j + 1).toString());
         await Firestore.instance
             .collection('Students')
             .document(widget.detailsUser.userId)
@@ -227,9 +227,7 @@ class _GecmisDersler extends State<GecmisDersler> {
   int ortEcts = 0;
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigoAccent,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text('Uni-Grade'),
         actions: <Widget>[
           Padding(
@@ -268,7 +266,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                   backgroundImage: NetworkImage(widget.detailsUser.photoUrl),
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent,
+                  color: Colors.amber,
                 ),
               ),
               new ListTile(
@@ -325,7 +323,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                     children: <Widget>[
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(3),
                           child: RaisedButton(
                             onPressed: () {
                               setState(() {
@@ -355,7 +353,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(3),
                           child: RaisedButton(
                             onPressed: () {
                               setState(() {
@@ -373,9 +371,9 @@ class _GecmisDersler extends State<GecmisDersler> {
                                 }
                                 ort = ort / ortEcts;
                                 print(ort);
+                                data[2] = ort.toStringAsFixed(2);
                                 //print(dersCount);
                                 //print(widget.detailsUser.userId);
-                                writeToServer();
                               });
                             },
                             color: Colors.blue,
@@ -388,7 +386,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(3),
                           child: RaisedButton(
                             onPressed: () {
                               setState(() {
@@ -405,7 +403,7 @@ class _GecmisDersler extends State<GecmisDersler> {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Row(
@@ -427,9 +425,6 @@ class _GecmisDersler extends State<GecmisDersler> {
                   });
                 },
                 child: Card(
-                  
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
                     borderOnForeground: true,
                     elevation: 6,
                     child: ExpansionTile(
@@ -484,8 +479,10 @@ class _GecmisDersler extends State<GecmisDersler> {
                                               .digitsOnly
                                         ],
                                         decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'ECTS'),
+                                          border: OutlineInputBorder(),
+                                          labelText: 'ECTS',
+                                          //labelStyle: TextStyle(fontSize: 8)
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: 5),
@@ -548,12 +545,10 @@ class _GecmisDersler extends State<GecmisDersler> {
                           },
                         ),
                         Container(
-                          
                             margin: EdgeInsets.only(top: 5),
                             height: 50,
                             width: 350,
                             decoration: BoxDecoration(
-                              
                                 border: Border.all(color: Colors.black26),
                                 borderRadius: BorderRadius.circular(10)),
                             child: GestureDetector(
